@@ -1,0 +1,27 @@
+# Environment
+.env
+*.pyc
+__pycache__/
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Frontend
+front_end/node_modules/
+front_end/dist/
+front_end/.vite/
+
+# macOS
+.DS_Store
+
+# Evidence / screenshots from agent runs
+backend/evidence/
+*.png
+*.mp3
+*.wav
+*.webm
+
+# Logs
+*.log

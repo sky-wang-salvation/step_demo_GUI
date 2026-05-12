@@ -70,6 +70,8 @@ class ADBController:
             new_w = int(img.width * scale)
             new_h = int(img.height * scale)
             img = img.resize((new_w, new_h), Image.LANCZOS)
+            if img.mode != "RGB":
+                img = img.convert("RGB")
             buf = io.BytesIO()
             img.save(buf, format="JPEG", quality=85)
             raw = buf.getvalue()

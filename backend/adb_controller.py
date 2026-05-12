@@ -1,7 +1,10 @@
 import subprocess
 import base64
+import io
 import logging
 from typing import Optional
+
+from PIL import Image
 
 logger = logging.getLogger(__name__)
 
@@ -59,8 +62,18 @@ class ADBController:
         result = self._run("exec-out", "screencap", "-p", timeout=15)
         return result.stdout
 
-    def screenshot_b64(self) -> str:
-        return base64.b64encode(self.screenshot()).decode()
+    def screenshot_b64(self, scale: float = 1.0) -> str:
+        """截图并可选压缩。scale=0.5 将 1080×2400 压缩为 540×1200，减少 token 消耗。"""
+        raw = self.screenshot()
+        if scale < 1.0:
+            img = Image.open(io.BytesIO(raw))
+            new_w = int(img.width * scale)
+            new_h = int(img.height * scale)
+            img = img.resize((new_w, new_h), Image.LANCZOS)
+            buf = io.BytesIO()
+            img.save(buf, format="JPEG", quality=85)
+            raw = buf.getvalue()
+        return base64.b64encode(raw).decode()
 
     # ── Input ────────────────────────────────────────────────────────────────────
 
